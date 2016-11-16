@@ -59,7 +59,7 @@ def voter(db, context, log, fields):
              """
              voterid="V"+"".join(random.sample("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",6))
              """Try to retrieve the number of votes for this voterid."""
-             db.fetch(crusherdict.countName(voterid))
+             db.fetch(1dict.countName(voterid))
              """No KeyError? Guess this voterid is already used, so loop to
                 try another one.
              """

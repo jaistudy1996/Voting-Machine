@@ -327,7 +327,7 @@ if __name__ == "__main__":
     
     try:
         """Try retrieving using the complex key."""
-        print(cache.fetch(key))
+        print(cache.fetch(("test","m",12,-76,7.234,-8.763,10004.3422,(123,"h"))))
     except KeyError as error:
         """It should work, but could give an error if the complex key was
            corrupted.
