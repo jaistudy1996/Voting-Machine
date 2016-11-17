@@ -133,3 +133,47 @@ VOTE Goveno r Mickey Mouse
 VOTE Mayor R o nal d Goose
 CAST 8948298145031
 ```
+##  Database Subsystem Design
+You do not need to understand how the database subsystem works to engineer a solution
+for this problem, but it may help some groups to have the implementation details. This
+may enable you to make informed choices about the best way to introduce data redundancy
+into the program.
+The database subsystem uses 4 components
+
+### Noisy Channel
+A noisy channel is communication pathway that is subject to faults. Data is put in to the
+channel, and then comes out the other side. These noisy channels support several different
+configurable failure modes, each with its own failure rate, expressed in faults per bit of
+message length.
+
+>* Bit flip. When a bit flip occurs, one bit of the data is changed.
+>*Clone. When a clone occurs, the entire message is replaced with the previous
+message passed on the channel.
+>*Scramble. When a scramble occurs, the bits in the message are shuffled into a
+different order. Exactly one leading 0 bit is included in the scrambling
+
+###  Noisy Cache
+A cache allows temporary storage of data that has been recently used so that it can be reused
+more efficiently. This cache has 2^k
+slots for holding key-value pairs. Each key is mapped
+into exactly one slot using the lowest magnitude k bits of the key. The cache supports two
+operations: store a key-value pair in the cache (replacing any existing key-value pair in the
+appropriate slot) and retrieving the value associated with a key, which returns wither the
+value for that key or an indicator that the key is not present.
+The noisy cache supports several failure techniques, each with a rate of occurence
+measured in faults per bit proccessed, where the bits processed include the bits in the key
+and value combined.
+
+>* False hit. The cache returns the value stored in the appropriate slot without checking
+that the key matches.
+Random hit. The cache returns the value stored in a randomly selected slot.
+>* Key half-write. The cache stores the new key in the slot, but does not store the new
+value. Suppose that the slot previously contained ‘cat’:‘Tom’ and we are attempting
+to store ‘dog’:‘Fido’ in the same slot. After this fault, the slot will contain ‘dog’:‘Tom’
+and a subsequent attempt to retrieve the value of ‘dog’ will yield ‘Tom’ instead of
+‘Fido.’
+>* Value half-write. The cache stores the new value in the slot, but does not store
+the new key. Suppose that the slot previously contained ‘cat’:‘Tom’ and we are
+attempting to store ‘dog’:‘Fido’ in the same slot. After this fault, the slot will contain
+‘cat’:‘Fido’ and a subsequent attempt to retrieve the value of ‘cat’ will yield ‘Fido’
+instead of ‘Tom.’
