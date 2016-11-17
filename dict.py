@@ -32,7 +32,7 @@ class Dict:
 		self.db = db
 		self.internalDict = name
 
-	def insertChecksum(self, value):
+	def __insertChecksum__(self, value):
 		'''Calculate md5 checksum of the whole key and value combined'''
 		md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
 		return md5_hash
@@ -41,7 +41,7 @@ class Dict:
 		'''Key is supposed to be of type list and should be as follows
 				key = ["VOTERID", "type(o, c, m)"]'''
 		#if(key[1] == "m"):
-		#	insertChecksum(key)   ## m should be internal and not added by the main program 
+		#	__insertChecksum__(key)   ## m should be internal and not added by the main program 
 									## needs editing
 		for i in range(1, VERSIONS):
 			keyToStore = keyForDb(key[0], i, key[1])
@@ -51,7 +51,7 @@ class Dict:
 				checkSumKeyToStore = keyForDb(key[0], i, "om")
 			if(key[1] == "c"):
 				checkSumKeyToStore = keyForDb(key[0], i, "cm")
-			checkSumValueToStore = self.insertChecksum(value)
+			checkSumValueToStore = self.__insertChecksum__(value)
 			self.db.store(checkSumKeyToStore, checkSumValueToStore)
 
 	def select(self, key):
@@ -85,10 +85,11 @@ class Dict:
 		most_common_from_checksum = freq_checksum.max()
 
 		# Compare checksum 
-		most_common_from_selection_checkSum = self.insertChecksum(most_common_from_selection)
+		most_common_from_selection_checkSum = self.__insertChecksum__(most_common_from_selection)
 		if(most_common_from_selection_checkSum == most_common_from_checksum):
 			return most_common_from_selection
 		else:
+			# Raise checksum error is it does not match.
 			raise ChecksumDoesNotMatchError
 
 	def selectChecksum():
