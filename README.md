@@ -177,3 +177,98 @@ the new key. Suppose that the slot previously contained ‘cat’:‘Tom’ and 
 attempting to store ‘dog’:‘Fido’ in the same slot. After this fault, the slot will contain
 ‘cat’:‘Fido’ and a subsequent attempt to retrieve the value of ‘cat’ will yield ‘Fido’
 instead of ‘Tom.’
+
+### Database
+The database is a well-behaved dictionary. When the program exits, the contents of the
+dictionary are written to a file named `source-votes.txt`. When the program starts, the
+contents of this file, if present, are ready into the dictionary. The file consists of one line 
+per database entry, containing the key, then a tab, then the value. As such, tabs are not
+permitted in keys or values. The entries may appear in this file in any order.
+
+### Broker
+The database system is managed by a broker. The broker accepts commands from the
+program, attempts to satisfy them from cache if possible, and ensures that the database is
+up-to-date. The broker supports a few failure modes of its own.
+>* Write failure. The broker sends the data to the cache, but fails to send the data to the
+database.
+>* Read failure. The broker returns that there is no data, without checking the cache or
+database first.
+>* Replay failure. On reading from the database, the broker returns whatever it last
+returned instead of checking the cahce or database.
+
+### Architecture
+
+####When the program invokes the function to set the value of a key, the following components
+are active:
+1. The input key is passed through a noisy channel to the broker.
+2. The input value is passed through a noisy channel to the broker.
+3. The key is passed through a noisy channel from the broker to the cache.
+4. The value is passed through a noisy channel from the broker to the cache.
+5. The cache stores the key and value in the appropriate slot, discarding whatever was
+already there.
+6. The key is passed through a noisy channel from the broker to the database.
+7. The value is passed through a noisy channel from the broker to the database.
+8. The key, value pair is stored in the database, replacing any key-value pair that had
+the same key.
+
+#### When the program invokes the function to append a value to the list associated with a
+key, the following components are active:
+
+1. The input key is passed through a noisy channel to the broker.
+2. The input value is passed through a noisy channel to the broker.
+3. The key is passed through a noisy channel from the broker to the cache.
+4. The cache looks up the value associated with the key, if any.
+5. If the value was found in the cache:
+(a) The value is passed through a noisy channel from the cache to the broker.
+(b) If the cached value is a tuple, the broker appends the input value to it. Otherwise,
+the broker makes a tuple containing the cached value and the input value.
+6. If the value was not found in the cache:
+(a) The key is passed through a noisy channel from the broker to the database.
+(b) The database looks up the value associated with the key, if any.
+(c) If the value was found in the database:
+i. The value is passed through a noisy channel from the database to the
+broker.
+ii. If the retrieved value is a tuple, the broker appends the input value to it.
+Otherwise, the broker makes a tuple containing the retireved value and the
+input value.
+(d) If the value was not found in the database:
+i. The broker creates a tuple containing the input value.
+7. The key is passed through a noisy channel from the broker to the cache.
+8. The tuple is passed through a noisy channel from the broker to the cache.
+9. The cache stores the key and tuple in the appropriate slot, discarding whatever was
+already there.
+10. The key is passed through a noisy channel from the broker to the database.
+11. The tuple is passed through a noisy channel from the broker to the database.
+12. The key, value pair is stored in the database, replacing any key-value pair that had
+the same key. If there were no faults, this has the effect of replacing the tuple that
+was there with the tuple that has had the input value appended.
+
+#### When the program invokes the function to retrieve the value associated with a key:
+1. The input key is passed through a noisy channel to the broker.
+2. The key is passed through a noisy channel from the broker to the cache.
+3. The cache looks up the value associated with the key, if any.
+4. The value, if found, is passed through a noisy channel from the cache to the broker.
+5. If the value was not found in the cache:
+(a) The key is passed through a noisy channel from the broker to the database.
+(b) The database looks up the value associated with the key, if any.
+(c) If the value was found in the database:
+i. The value is passed through a noisy channel from the database to the
+broker.
+ii. The key is passed through a noisy channel from the broker to the cache.
+iii. The value is passed through a noisy channel from the broker to the cache.
+iv. The cache stores the key and value in the appropriate slot, discarding
+whatever was already there.
+6. The found value, if any, is passed through a noisy channel from the broker to the
+program.
+
+#### When the program invokes the function to delete a key and its associated value:
+1. The input key is passed through a noisy channel to the broker.
+2. The key is passed through a noisy channel from the broker to the cache.
+3. The cache looks for and removes the key from the cache if found.
+4. The key is passed through a noisy channel from the broker to the database.
+5. The database looks up the value associated with the key, if any.
+6. If the value was found in the database:
+(a) The key and its value are removed from the database.
+(b) The value is passed through a noisy channel from the database to the broker.
+(c) The found value is passed through a noisy channel from the broker to the
+program.
