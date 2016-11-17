@@ -242,9 +242,9 @@ the same key.
 3. The cache looks up the value associated with the key, if any.
 4. The value, if found, is passed through a noisy channel from the cache to the broker.
 5. If the value was not found in the cache:
-	(a) The key is passed through a noisy channel from the broker to the database.
-	(b) The database looks up the value associated with the key, if any.
-	(c) If the value was found in the database:
+	1. The key is passed through a noisy channel from the broker to the database.
+	2. The database looks up the value associated with the key, if any.
+	3. If the value was found in the database:
 		i. The value is passed through a noisy channel from the database to the broker.
 		ii. The key is passed through a noisy channel from the broker to the cache.
 		iii. The value is passed through a noisy channel from the broker to the cache.
@@ -259,7 +259,7 @@ program.
 4. The key is passed through a noisy channel from the broker to the database.
 5. The database looks up the value associated with the key, if any.
 6. If the value was found in the database:
-	(a) The key and its value are removed from the database.
-	(b) The value is passed through a noisy channel from the database to the broker.
-	(c) The found value is passed through a noisy channel from the broker to the
+	1. The key and its value are removed from the database.
+	2. The value is passed through a noisy channel from the database to the broker.
+	3. The found value is passed through a noisy channel from the broker to the
 program.
