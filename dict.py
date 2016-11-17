@@ -22,10 +22,10 @@ class Dict:
 		self.db = db
 		self.internalDict = name
 
-	def insertChecksum(self, key):
+	def insertChecksum(self, value):
 		'''Calculate md5 checksum of the whole key and value combined'''
-		md5_hash = hashlib.md5(key.encode("utf-8")).hexdigest()
-		return str(md5_hash)
+		md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
+		return md5_hash
 
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
