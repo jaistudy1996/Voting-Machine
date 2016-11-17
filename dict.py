@@ -2,7 +2,9 @@
 
 '''Data strucutre for the reliable systems project'''
 
-VERSIONS = 16
+import crusher
+
+VERSIONS = 16  #Just for testing purpose. The actual one is yet to be calculated
 '''VERSIONS -1 = 16 : Number of time the key and value pair will be replicated in the database'''
 
 def keyForDb(voterID, version, typeOfKey):
@@ -11,7 +13,6 @@ def keyForDb(voterID, version, typeOfKey):
 		the typeOfKey can be of three types: o -- office, c -- candidate, m -- checksum'''
 	return str(voterID)+"-"+str(version)+"-"+str(typeOfKey)
 
-import crusher
 
 class Dict:
 
@@ -21,24 +22,34 @@ class Dict:
 		self.internalDict = name
 
 	def insert(self, key, value):
+		'''Key is supposed to be of type list and should be as follows
+				key = ["VOTERID", "type(o, c, m)"]'''
 		for i in range(1, VERSIONS):
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
 
+	def insertChecksum():
+		pass
+
 	def select(self, key):
+		selection = [] # TO_DO: add voting/checksum check.
 		for i in range(1, VERSIONS):
 			keyToSelect = keyForDb(key[0], i, key[1])
-			print(self.db.fetch(keyToSelect))
+			try:
+				selection.append(self.db.fetch(keyToSelect))
+			except KeyError:
+				select.append("DOES_NOT_EXIST")
+		return selection
 
+	def selectChecksum():
+		pass
 
 if __name__ == "__main__":
 	db = crusher.Broker("testDict.txt")
 	db.configure("((1,2,3,4,5,6,7,8))")
 
 	test = Dict(db, "test")
-
 	key = [1, "o"]
-
 	value = "Governor"
 	test.insert(key, value)
-	test.select(key)
+	print(test.select(key))
