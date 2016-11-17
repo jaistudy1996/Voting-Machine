@@ -245,10 +245,10 @@ the same key.
 	1. The key is passed through a noisy channel from the broker to the database.
 	2. The database looks up the value associated with the key, if any.
 	3. If the value was found in the database:
-		i. The value is passed through a noisy channel from the database to the broker.
-		ii. The key is passed through a noisy channel from the broker to the cache.
-		iii. The value is passed through a noisy channel from the broker to the cache.
-		iv. The cache stores the key and value in the appropriate slot, discarding whatever was already there.
+		1. The value is passed through a noisy channel from the database to the broker.
+		2. The key is passed through a noisy channel from the broker to the cache.
+		3. The value is passed through a noisy channel from the broker to the cache.
+		4. The cache stores the key and value in the appropriate slot, discarding whatever was already there.
 6. The found value, if any, is passed through a noisy channel from the broker to the
 program.
 
