@@ -3,6 +3,7 @@
 '''Data strucutre for the reliable systems project'''
 
 import crusher
+import hashlib
 
 VERSIONS = 16  #Just for testing purpose. The actual one is yet to be calculated
 '''VERSIONS -1 = 16 : Number of time the key and value pair will be replicated in the database'''
@@ -31,8 +32,11 @@ class Dict:
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
 
-	def insertChecksum():
-		pass
+	def insertChecksum(key):
+
+		md5_hash = hashlib.md5(key).hexdigest()
+
+		return md5_hash
 
 	def select(self, key):
 		selection = [] # TO_DO: add voting/checksum check.
@@ -46,6 +50,10 @@ class Dict:
 
 	def selectChecksum():
 		pass
+
+
+
+	
 
 if __name__ == "__main__":
 	db = crusher.Broker("testDict.txt")
