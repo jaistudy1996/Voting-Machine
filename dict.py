@@ -24,6 +24,9 @@ class Dict:
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
 				key = ["VOTERID", "type(o, c, m)"]'''
+		if(key[1] == "m"):
+			insertChecksum(key)   ## m should be internal and not added by the main program 
+									## needs editing
 		for i in range(1, VERSIONS):
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
