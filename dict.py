@@ -4,6 +4,7 @@
 
 import crusher
 import hashlib
+from nltk import FreqDist
 
 VERSIONS = 16  #Just for testing purpose. The actual one is yet to be calculated
 '''VERSIONS -1 = 16 : Number of time the key and value pair will be replicated in the database'''
@@ -47,15 +48,18 @@ class Dict:
 			keyToSelect = keyForDb(key[0], i, key[1])
 			try:
 				selection.append(self.db.fetch(keyToSelect))
+			# except UnicodeEncodeError:
+			# 	selection.append("UnicodeEncodeError")
 			except KeyError:
 				selection.append("DOES_NOT_EXIST")
-		return selection
+
+		# Voting using NLTK's FreqDist module.
+		freqdist = FreqDist(selection)
+		most_common = freqdist.max()
+		return most_common
 
 	def selectChecksum():
 		pass
-
-
-
 	
 
 if __name__ == "__main__":
@@ -67,4 +71,7 @@ if __name__ == "__main__":
 	key = [1, "o"]
 	value = "Governor"
 	test.insert(key, value)
-	print(test.select(key))
+	try:
+		print(test.select(key)) # will need to except unicodeecode error in voting.py
+	except UnicodeEncodeError:
+		pass
