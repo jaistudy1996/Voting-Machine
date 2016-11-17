@@ -211,37 +211,30 @@ already there.
 8. The key, value pair is stored in the database, replacing any key-value pair that had
 the same key.
 
-#### When the program invokes the function to append a value to the list associated with a
-key, the following components are active:
+#### When the program invokes the function to append a value to the list associated with a key, the following components are active:
 
 1. The input key is passed through a noisy channel to the broker.
 2. The input value is passed through a noisy channel to the broker.
 3. The key is passed through a noisy channel from the broker to the cache.
 4. The cache looks up the value associated with the key, if any.
 5. If the value was found in the cache:
-(a) The value is passed through a noisy channel from the cache to the broker.
-(b) If the cached value is a tuple, the broker appends the input value to it. Otherwise,
-the broker makes a tuple containing the cached value and the input value.
+	1. The value is passed through a noisy channel from the cache to the broker.
+	2. If the cached value is a tuple, the broker appends the input value to it. Otherwise, the broker makes a tuple containing the cached value and the input value.
 6. If the value was not found in the cache:
-(a) The key is passed through a noisy channel from the broker to the database.
-(b) The database looks up the value associated with the key, if any.
-(c) If the value was found in the database:
-i. The value is passed through a noisy channel from the database to the
-broker.
-ii. If the retrieved value is a tuple, the broker appends the input value to it.
-Otherwise, the broker makes a tuple containing the retireved value and the
-input value.
-(d) If the value was not found in the database:
-i. The broker creates a tuple containing the input value.
+	1. The key is passed through a noisy channel from the broker to the database.
+	2. The database looks up the value associated with the key, if any.
+	3. If the value was found in the database:
+		i. The value is passed through a noisy channel from the database to the broker.
+		ii. If the retrieved value is a tuple, the broker appends the input value to it.
+	Otherwise, the broker makes a tuple containing the retireved value and the input value.
+	4. If the value was not found in the database:
+		i. The broker creates a tuple containing the input value.
 7. The key is passed through a noisy channel from the broker to the cache.
 8. The tuple is passed through a noisy channel from the broker to the cache.
-9. The cache stores the key and tuple in the appropriate slot, discarding whatever was
-already there.
+9. The cache stores the key and tuple in the appropriate slot, discarding whatever was already there.
 10. The key is passed through a noisy channel from the broker to the database.
 11. The tuple is passed through a noisy channel from the broker to the database.
-12. The key, value pair is stored in the database, replacing any key-value pair that had
-the same key. If there were no faults, this has the effect of replacing the tuple that
-was there with the tuple that has had the input value appended.
+12. The key, value pair is stored in the database, replacing any key-value pair that had the same key. If there were no faults, this has the effect of replacing the tuple that was there with the tuple that has had the input value appended.
 
 #### When the program invokes the function to retrieve the value associated with a key:
 1. The input key is passed through a noisy channel to the broker.
