@@ -1,6 +1,12 @@
 #! /usr/bin/env python3
 
-'''Data strucutre for the reliable systems project'''
+'''
+	Data strucutres for the reliable systems project
+	
+	Author: Jayant Arora
+
+	Team Members: Akshay, Mahir, Robert, Xiao
+'''
 
 import crusher
 import hashlib
@@ -44,19 +50,21 @@ class Dict:
 
 	def select(self, key):
 		selection = [] # TO_DO: add voting/checksum check.
+		checksumList = [1]
 		for i in range(1, VERSIONS):
 			keyToSelect = keyForDb(key[0], i, key[1])
 			try:
 				selection.append(self.db.fetch(keyToSelect))
-			# except UnicodeEncodeError:
-			# 	selection.append("UnicodeEncodeError")
 			except KeyError:
 				selection.append("DOES_NOT_EXIST")
 
 		# Voting using NLTK's FreqDist module.
-		freqdist = FreqDist(selection)
-		most_common = freqdist.max()
-		return most_common
+		freq_selection = FreqDist(selection)
+		most_common_from_selection = freq_selection.max()
+
+		freq_checksum = FreqDist(checksumList)
+		most_common_from_checksum = freq_checksum.max()
+		return most_common_from_selection
 
 	def selectChecksum():
 		pass
