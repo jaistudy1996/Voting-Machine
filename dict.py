@@ -12,6 +12,9 @@ import crusher
 import hashlib
 from nltk import FreqDist
 
+class ChecksumDoesNotMatchError(Exception):
+	pass
+
 VERSIONS = 16  #Just for testing purpose. The actual one is yet to be calculated
 '''VERSIONS -1 = 16 : Number of time the key and value pair will be replicated in the database'''
 
@@ -44,13 +47,18 @@ class Dict:
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
 			## checksum store
-			checkSumKeyToStore = keyForDb(key[0], i, "m")
+			if(key[1] == "o"):
+				checkSumKeyToStore = keyForDb(key[0], i, "om")
+			if(key[1] == "c"):
+				checkSumKeyToStore = keyForDb(key[0], i, "cm")
 			checkSumValueToStore = self.insertChecksum(value)
 			self.db.store(checkSumKeyToStore, checkSumValueToStore)
 
 	def select(self, key):
-		selection = [] # TO_DO: add voting/checksum check.
-		checksumList = [1]
+		selection = []
+		checksumList = []
+		
+		# Get data for the supplied key
 		for i in range(1, VERSIONS):
 			keyToSelect = keyForDb(key[0], i, key[1])
 			try:
@@ -58,13 +66,30 @@ class Dict:
 			except KeyError:
 				selection.append("DOES_NOT_EXIST")
 
+		# Get checksum for the supplied key
+		for i in range(1, VERSIONS):
+			if(key[1] == "o"):
+				keyForChecksum = keyForDb(key[0], i, "om")
+			if(key[1] == "c"):
+				keyForChecksum = keyForDb(key[0], i, "cm")
+			try:
+				checksumList.append(self.db.fetch(keyForChecksum))
+			except KeyError:
+				checksumList.append("CHECKSUM_DOES_NOT_EXIST")
+
 		# Voting using NLTK's FreqDist module.
 		freq_selection = FreqDist(selection)
 		most_common_from_selection = freq_selection.max()
 
 		freq_checksum = FreqDist(checksumList)
 		most_common_from_checksum = freq_checksum.max()
-		return most_common_from_selection
+
+		# Compare checksum 
+		most_common_from_selection_checkSum = self.insertChecksum(most_common_from_selection)
+		if(most_common_from_selection_checkSum == most_common_from_checksum):
+			return most_common_from_selection
+		else:
+			raise ChecksumDoesNotMatchError
 
 	def selectChecksum():
 		pass
