@@ -32,6 +32,7 @@ class Dict:
 			self.db.store(keyToStore, value)
 
 	def insertChecksum():
+		'''Calculate md5 checksum of the whole key and value combined'''
 		pass
 
 	def select(self, key):
