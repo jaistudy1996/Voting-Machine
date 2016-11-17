@@ -82,7 +82,7 @@ of the line
 Example: `CONF cache-false-rate 0.00001`
 
 ### Voter command
-The voter command contains only the command VOTER.
+The voter command contains only the command `VOTER`.
 
 ### Vote command
 The vote command begins with the command `VOTE`, followed by the office and the selected
@@ -96,3 +96,40 @@ followed by a tab and then the vote record number.
 After this command is processed, the program is required to purge all of its variables,
 except that it can keep the files and database subsystem open. This requirement is to ensure
 that you do not cheat by circumventing the noisy database subsystem.
+
+Example from the input file:
+
+```
+VOTER
+VOTE Goveno r S i l l y Hen
+VOTER
+VOTE Goveno r Mickey Mouse
+VOTE Mayor R o nal d Goose
+CAST
+```
+
+Example from the vote receipt log:
+
+```
+VOTER
+VOTE Goveno r Mickey Mouse
+VOTE Mayor R o nal d Goose
+CAST 8948298145031
+```
+
+### Inquiry command
+The inquiry command contains the command `INQ`, followed by a tab and then the vote
+record number. To process this command, the program should look up the votes cast for
+the specified voter record number, and print a copy of the voter receipt on the voter receipt
+log file.
+
+Example from input file:
+`INQ 8948298145031`
+
+This should result in the following displayed in the vote receipt log:
+```
+VOTER
+VOTE Goveno r Mickey Mouse
+VOTE Mayor R o nal d Goose
+CAST 8948298145031
+```
