@@ -22,27 +22,24 @@ class Dict:
 		self.db = db
 		self.internalDict = name
 
+	def insertChecksum(self, key):
+		'''Calculate md5 checksum of the whole key and value combined'''
+		md5_hash = hashlib.md5(key.encode("utf-8")).hexdigest()
+		return str(md5_hash)
+
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
 				key = ["VOTERID", "type(o, c, m)"]'''
-		if(key[1] == "m"):
-			insertChecksum(key)   ## m should be internal and not added by the main program 
+		#if(key[1] == "m"):
+		#	insertChecksum(key)   ## m should be internal and not added by the main program 
 									## needs editing
 		for i in range(1, VERSIONS):
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
-
-<<<<<<< HEAD
-	def insertChecksum():
-		'''Calculate md5 checksum of the whole key and value combined'''
-		pass
-=======
-	def insertChecksum(key):
-
-		md5_hash = hashlib.md5(key).hexdigest()
-
-		return md5_hash
->>>>>>> 39429a8fb4e7351edfba0e7950c2625627b5915f
+			## checksum store
+			checkSumKeyToStore = keyForDb(key[0], i, "m")
+			checkSumValueToStore = self.insertChecksum(value)
+			self.db.store(checkSumKeyToStore, checkSumValueToStore)
 
 	def select(self, key):
 		selection = [] # TO_DO: add voting/checksum check.
@@ -51,7 +48,7 @@ class Dict:
 			try:
 				selection.append(self.db.fetch(keyToSelect))
 			except KeyError:
-				select.append("DOES_NOT_EXIST")
+				selection.append("DOES_NOT_EXIST")
 		return selection
 
 	def selectChecksum():
@@ -63,7 +60,8 @@ class Dict:
 
 if __name__ == "__main__":
 	db = crusher.Broker("testDict.txt")
-	db.configure("((1,2,3,4,5,6,7,8))")
+	db.configure("(0,0,0,0,0,0)")
+	#db.configure("((1,2,3,4,5,6,7,8))")
 
 	test = Dict(db, "test")
 	key = [1, "o"]
