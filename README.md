@@ -198,8 +198,8 @@ returned instead of checking the cahce or database.
 
 ### Architecture
 
-####When the program invokes the function to set the value of a key, the following components
-are active:
+#### When the program invokes the function to set the value of a key, the following components are active:
+
 1. The input key is passed through a noisy channel to the broker.
 2. The input value is passed through a noisy channel to the broker.
 3. The key is passed through a noisy channel from the broker to the cache.
