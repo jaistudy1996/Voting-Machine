@@ -55,6 +55,10 @@ class Dict:
 			self.db.store(checkSumKeyToStore, checkSumValueToStore)
 
 	def select(self, key):
+		''''
+			select(key) mimics the db.fetch method from crusher.py
+			The name select comes from the sql sytax for processing select queries
+		'''
 		selection = []
 		checksumList = []
 		
@@ -108,4 +112,6 @@ if __name__ == "__main__":
 	try:
 		print(test.select(key)) # will need to except unicodeecode error in voting.py
 	except UnicodeEncodeError:
+		pass
+	except ChecksumDoesNotMatchError:
 		pass
