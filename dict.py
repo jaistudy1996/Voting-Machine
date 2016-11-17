@@ -115,3 +115,5 @@ if __name__ == "__main__":
 		pass
 	except ChecksumDoesNotMatchError:
 		pass
+	db.exit()
+	
