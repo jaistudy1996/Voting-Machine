@@ -2,6 +2,15 @@
 
 '''Data strucutre for the reliable systems project'''
 
+VERSIONS = 16
+'''VERSIONS -1 = 16 : Number of time the key and value pair will be replicated in the database'''
+
+def keyForDb(voterID, version, typeOfKey):
+	'''keyForDb: this function makes keys suitable for database.
+		the version stands for the verison of the key that is being stored.
+		the typeOfKey can be of three types: o -- office, c -- candidate, m -- checksum'''
+	return str(voterID)+"-"+str(version)+"-"+str(typeOfKey)
+
 import crusher
 
 class Dict:
@@ -12,17 +21,24 @@ class Dict:
 		self.internalDict = name
 
 	def insert(self, key, value):
-		self.db.store(key, value)
+		for i in range(1, VERSIONS):
+			keyToStore = keyForDb(key[0], i, key[1])
+			self.db.store(keyToStore, value)
 
 	def select(self, key):
-		return self.db.fetch(key)
+		for i in range(1, VERSIONS):
+			keyToSelect = keyForDb(key[0], i, key[1])
+			print(self.db.fetch(keyToSelect))
 
 
 if __name__ == "__main__":
 	db = crusher.Broker("testDict.txt")
+	db.configure("((1,2,3,4,5,6,7,8))")
 
 	test = Dict(db, "test")
-	key = "key1"
-	value = "value1"
+
+	key = [1, "o"]
+
+	value = "Governor"
 	test.insert(key, value)
-	print(test.select(key))
+	test.select(key)
