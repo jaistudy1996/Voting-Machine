@@ -9,13 +9,13 @@ failure rate. The database will corrupt information at a rate of approximately 1
 
 ## Functional Requirements
 
-	1. The system will be provided with an input file containing a sequence of commands
+1. The system will be provided with an input file containing a sequence of commands
 to be processed in sequence.
-	2. The operators must be able to terminate the program prematurely.
-	3. When the program terminates (either from reaching the end of the input file or from
+2. The operators must be able to terminate the program prematurely.
+3. When the program terminates (either from reaching the end of the input file or from
 an early termination) the program must create a file containing the number of voters
 processed and the number of votes received by each each candidate in each position.
-	4. The program must produce an output log containing the simulated “receipts” that
+4. The program must produce an output log containing the simulated “receipts” that
 were given to voters.
 	5. The program must support a configuration command for passing configuration parameters
 to the database subsystem.
@@ -80,6 +80,6 @@ with this command should be passed to the database subsystem without examining t
 of the line
 
 	Example: 
-		~~~~~~
+		~~~~
 			CONF cache-false-rate 0.00001
-		~~~~~~
+		~~~~
