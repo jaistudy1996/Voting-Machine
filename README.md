@@ -7,7 +7,7 @@ The system you design will be modified to simulate a database with relatively hi
 failure rate. The database will corrupt information at a rate of approximately 1 fault per
 1000 bits stored or retrieved.
 
-## Functional Requirements
+## Functional Requirements:
 
 1. The system will be provided with an input file containing a sequence of commands
 to be processed in sequence.
@@ -28,7 +28,7 @@ by a voter.
 10. The program must support an inquire command to list the votes associated with a
 specific vote record number.
 
-## Non-Functional Requirements
+## Non-Functional Requirements:
 
 1. The system must have a MTTF<1,000,000 votes when the database system has a
 failure rate of 1 corruption per 500 bits of data stored or retrieved.
@@ -80,3 +80,19 @@ with this command should be passed to the database subsystem without examining t
 of the line
 
 Example: `CONF cache-false-rate 0.00001`
+
+### Voter command
+The voter command contains only the command VOTER.
+
+### Vote command
+The vote command begins with the command `VOTE`, followed by the office and the selected
+candidate, all separated by tab characters.
+
+### Cast command
+The cast command contains only the command `CAST`. It indicates that the user is ready
+to cast the votes that were identified. The votes must not be added to the tallies for the
+candidates until this command is received. When output in the vote receipt log, it is
+followed by a tab and then the vote record number.
+After this command is processed, the program is required to purge all of its variables,
+except that it can keep the files and database subsystem open. This requirement is to ensure
+that you do not cheat by circumventing the noisy database subsystem.
