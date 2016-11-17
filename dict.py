@@ -3,7 +3,7 @@
 '''
 	Data strucutres for the reliable systems project
 	
-	Author: Jayant Arora
+	Author: Jayant Arora, Akshay Singh
 
 	Team Members: Akshay, Mahir, Robert, Xiao
 '''
@@ -82,16 +82,16 @@ class Dict:
 				checksumList.append("CHECKSUM_DOES_NOT_EXIST")
 
 		# Voting using NLTK's FreqDist module.
-		freq_selection = FreqDist(selection)
-		most_common_from_selection = freq_selection.max()
+		freqSelection = FreqDist(selection)
+		mostCommonFromSelection = freqSelection.max()
 
-		freq_checksum = FreqDist(checksumList)
-		most_common_from_checksum = freq_checksum.max()
+		freqChecksum = FreqDist(checksumList)
+		mostCommonFromChecksum = freqChecksum.max()
 
 		# Compare checksum 
-		most_common_from_selection_checkSum = self.__insertChecksum__(most_common_from_selection)
-		if(most_common_from_selection_checkSum == most_common_from_checksum):
-			return most_common_from_selection
+		mostCommonFromSelectionCheckSum = self.__insertChecksum__(mostCommonFromSelection)
+		if(mostCommonFromSelectionCheckSum == mostCommonFromChecksum):
+			return mostCommonFromSelection
 		else:
 			# Raise checksum error is it does not match.
 			raise ChecksumDoesNotMatchError
