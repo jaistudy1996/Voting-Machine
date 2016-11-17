@@ -1,6 +1,6 @@
 ## Overview:
 	
-	You will design a program that simulates a voting machine. It will read a file containing
+You will design a program that simulates a voting machine. It will read a file containing
 the votes that users cast, give each voter a receipt to provide accountability and tally the
 votes for each candidate at the end.
 The system you design will be modified to simulate a database with relatively high
@@ -75,8 +75,8 @@ respond to a violation of this rule in any way.
 
 ### Configuration command
 
-	The configuration command begins with the command CONF. The whole line that starts
+The configuration command begins with the command CONF. The whole line that starts
 with this command should be passed to the database subsystem without examining the rest
 of the line
 
-	Example: `CONF cache-false-rate 0.00001`
+Example: `CONF cache-false-rate 0.00001`
