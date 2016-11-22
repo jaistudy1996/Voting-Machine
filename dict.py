@@ -89,8 +89,7 @@ class Dict:
 		mostCommonFromChecksum = freqChecksum.max()
 
 		# Compare checksum 
-		mostCommonFromSelectionCheckSum = self.__insertChecksum__(mostCommonFromSelection)
-		if(mostCommonFromSelectionCheckSum == mostCommonFromChecksum):
+		if(self.__CompareChecksumWithSelection_(mostCommonFromSelection, mostCommonFromChecksum) == True):
 			return mostCommonFromSelection
 		else:
 			# Raise checksum error is it does not match.
