@@ -99,7 +99,10 @@ class Dict:
 	def __CompareChecksumWithSelection_(self, selection, checksum):
 		# Will take two parameters (selection, checksum) and compare it to 
 		# return boolean value. 
-		pass
+		if(self.__insertChecksum__(selection) == checksum):
+			return True
+		else:
+			return False
 	
 
 if __name__ == "__main__":
