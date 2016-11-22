@@ -96,7 +96,9 @@ class Dict:
 			# Raise checksum error is it does not match.
 			raise ChecksumDoesNotMatchError
 
-	def selectChecksum():
+	def __CompareChecksumWithSelection_(self, selection, checksum):
+		# Will take two parameters (selection, checksum) and compare it to 
+		# return boolean value. 
 		pass
 	
 
