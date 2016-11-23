@@ -4,25 +4,30 @@ import dict
 import sys
 
 COMMANDS ={}
+VOTERID = 0
 
-def CONF():
-	print("CONF func")
-	pass
+def CONF(db, tempVotes, line):
+	db.configure(line[1])
+
 COMMANDS["CONF"] = CONF
 
-def VOTE():
-	print("VOTE func")
-	pass
-COMMANDS["VOTE"] = VOTE
+def VOTER(db, tempVotes, line):
+	tempVotes.clear()
+	global VOTERID
+	VOTERID += 1
+	tempVotes.append(VOTERID)
+	# return False	# Might be used in future
 
-def VOTER():
-	print("VOTER func")
-	pass
 COMMANDS["VOTER"] = VOTER
 
-def CAST():
-	print("CAST func")
+def VOTE(db, tempVotes, line):
 	pass
+
+COMMANDS["VOTE"] = VOTE
+
+def CAST(db, tempVotes, line):
+	print(tempVotes)
+
 COMMANDS["CAST"] = CAST
 
 ## File read implementation
@@ -31,8 +36,14 @@ try:
 except:
 	fileName = "bigeasy.txt"
 
+db = crusher.Broker(fileName)
+
 file = open(fileName, "r")
 
+tempVotes = []
 for line in file:
 	#print(line.split()[0])
-	COMMANDS[line.split()[0]]()
+	COMMANDS[line.split()[0]](db, tempVotes, line.split())
+
+file.close()
+db.exit()
