@@ -89,13 +89,14 @@ class Dict:
 		mostCommonFromChecksum = freqChecksum.max()
 
 		# Compare checksum 
-		if(self.__CompareChecksumWithSelection_(mostCommonFromSelection, mostCommonFromChecksum) == True):
+		if(self.__CompareChecksumWithSelection__(mostCommonFromSelection, mostCommonFromChecksum) == True):
 			return mostCommonFromSelection
 		else:
 			# Raise checksum error is it does not match.
+			# TO_DO: Again try more selections and checksum comparision
 			raise ChecksumDoesNotMatchError
 
-	def __CompareChecksumWithSelection_(self, selection, checksum):
+	def __CompareChecksumWithSelection__(self, selection, checksum):
 		# Will take two parameters (selection, checksum) and compare it to 
 		# return boolean value. 
 		if(self.__insertChecksum__(selection) == checksum):
