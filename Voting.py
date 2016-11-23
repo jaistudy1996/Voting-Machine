@@ -21,12 +21,19 @@ def VOTER(db, tempVotes, line):
 COMMANDS["VOTER"] = VOTER
 
 def VOTE(db, tempVotes, line):
-	pass
+	tempVotes.append((line[1], line[2]))
 
 COMMANDS["VOTE"] = VOTE
 
 def CAST(db, tempVotes, line):
-	print(tempVotes)
+	id = tempVotes[0]
+	office = []
+	candidate = []
+	for i in range(1, len(tempVotes)):
+		office.append(tempVotes[i][0])
+		candidate.append(tempVotes[i][1])
+	print(office)
+	print(candidate)
 
 COMMANDS["CAST"] = CAST
 
@@ -43,7 +50,7 @@ file = open(fileName, "r")
 tempVotes = []
 for line in file:
 	#print(line.split()[0])
-	COMMANDS[line.split()[0]](db, tempVotes, line.split())
+	COMMANDS[line.split()[0]](db, tempVotes, line.split("\t"))
 
 file.close()
 db.exit()
