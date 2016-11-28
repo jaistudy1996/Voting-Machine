@@ -6,26 +6,29 @@ import sys
 COMMANDS ={}
 VOTERID = 0
 
-def CONF(db, tempVotes, line):
+def CONF(db, tempVotes, line, logFile):
 	db.configure(line[1])
+	logFile.write("{}\t{}\t\n".format(line[0], line[1]))
 
 COMMANDS["CONF"] = CONF
 
-def VOTER(db, tempVotes, line):
+def VOTER(db, tempVotes, line, logFile):
 	tempVotes.clear()
 	global VOTERID
 	VOTERID += 1
 	tempVotes.append(VOTERID)
+	logFile.write("VOTER\n")
 	# return False	# Might be used in future
 
 COMMANDS["VOTER"] = VOTER
 
-def VOTE(db, tempVotes, line):
+def VOTE(db, tempVotes, line, logFile):
 	tempVotes.append((line[1], line[2]))
+	logFile.write("VOTE\t{}\t{}\n".format(line[1], line[2]))
 
 COMMANDS["VOTE"] = VOTE
 
-def CAST(db, tempVotes, line):
+def CAST(db, tempVotes, line, logFile):
 	database = dict.Dict(db)
 	id = tempVotes[0]
 	office = []
@@ -35,6 +38,7 @@ def CAST(db, tempVotes, line):
 		candidate.append(tempVotes[i][1])
 		database.insert([VOTERID, "o"], tempVotes[i][0])
 		database.insert([VOTERID,  "c"], tempVotes[i][1])
+	logFile.write("CAST\t{}\n".format(VOTERID))
 	print(office)
 	print(candidate)
 
@@ -48,13 +52,15 @@ except:
 
 db = crusher.Broker(fileName)
 
-file = open(fileName, "r")
+votesFile = open(fileName, "r")
+logFile = open(fileName[:-4]+"-votelog.txt", "w")
 
 tempVotes = []
-for line in file:
+for line in votesFile:
 	#print(line.split()[0])
 	line = line.strip()
-	COMMANDS[line.split()[0]](db, tempVotes, line.split("\t"))
+	COMMANDS[line.split()[0]](db, tempVotes, line.split("\t"), logFile)
 
-file.close()
+votesFile.close()
+logFile.close()
 db.exit()
