@@ -50,6 +50,7 @@ file = open(fileName, "r")
 tempVotes = []
 for line in file:
 	#print(line.split()[0])
+	line = line.strip()
 	COMMANDS[line.split()[0]](db, tempVotes, line.split("\t"))
 
 file.close()
