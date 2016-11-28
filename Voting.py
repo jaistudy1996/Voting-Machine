@@ -26,12 +26,15 @@ def VOTE(db, tempVotes, line):
 COMMANDS["VOTE"] = VOTE
 
 def CAST(db, tempVotes, line):
+	database = dict.Dict(db)
 	id = tempVotes[0]
 	office = []
 	candidate = []
 	for i in range(1, len(tempVotes)):
 		office.append(tempVotes[i][0])
 		candidate.append(tempVotes[i][1])
+		database.insert([VOTERID, "o"], tempVotes[i][0])
+		database.insert([VOTERID,  "c"], tempVotes[i][1])
 	print(office)
 	print(candidate)
 

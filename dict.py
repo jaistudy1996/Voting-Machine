@@ -27,7 +27,7 @@ def keyForDb(voterID, version, typeOfKey):
 
 class Dict:
 
-	def __init__(self, db, name):
+	def __init__(self, db, name="internalName"):
 		'''DB here belongs to class crusher. Name here is the name of the dictionary used.'''
 		self.db = db
 		self.internalDict = name
