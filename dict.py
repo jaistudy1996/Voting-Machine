@@ -35,7 +35,7 @@ class Dict:
 	def __insertChecksum__(self, value):
 		'''Calculate md5 checksum of the whole key and value combined'''
 		md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
-		return md5_hash
+		return md5_hash[:8]
 
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
