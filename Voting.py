@@ -32,10 +32,8 @@ def CAST(db, tempVotes, line, logFile):
 	database = dict.Dict(db)
 	database.insert([VOTERID, "t"], str(len(tempVotes) - 1))
 	for i in range(1, len(tempVotes)):
-		office.append(tempVotes[i][0])
 		officeNumber = "o"+str(i)
 		candidateNumber = "c"+str(i)
-		candidate.append(tempVotes[i][1])
 		database.insert([VOTERID, officeNumber], tempVotes[i][0])
 		database.insert([VOTERID,  candidateNumber], tempVotes[i][1])
 	logFile.write("CAST\t{}\n".format(VOTERID))
@@ -45,6 +43,25 @@ COMMANDS["CAST"] = CAST
 def report(db, reportFile):
 	database = dict.Dict(db, "report")
 	tallies = {}
+	for i in range(1, VOTERID):
+		try:	
+			totalVotes = database.select([i, "t"])
+			tallies[i] = []
+			tallies[i].append(totalVotes)
+			try:
+				for j in range(1, eval(totalVotes)):
+					officeNumber = "o"+str(j)
+					candidateNumber = "c"+str(j)
+					office = database.select([i, officeNumber])
+					candidate = database.select([i, candidateNumber])
+					tallies[i].append((office, candidate))
+			except NameError:
+				continue
+		except dict.ChecksumDoesNotMatchError:
+			continue
+	for keys in tallies:
+		line = str(keys) + "\t" + str(tallies[keys]) + "\n"
+		reportFile.write(line)
 
 
 ## File read implementation
@@ -57,6 +74,7 @@ db = crusher.Broker(fileName)
 
 votesFile = open(fileName, "r")
 logFile = open(fileName[:-4]+"-votelog.txt", "w")
+resultFile = open(fileName[:-4]+"-results.txt", "w")
 
 tempVotes = []
 for line in votesFile:
@@ -64,6 +82,8 @@ for line in votesFile:
 	line = line.strip()
 	COMMANDS[line.split()[0]](db, tempVotes, line.split("\t"), logFile)
 
+report(db, resultFile)
+resultFile.close()
 votesFile.close()
 logFile.close()
 db.exit()

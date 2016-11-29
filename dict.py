@@ -35,7 +35,7 @@ class Dict:
 	def __insertChecksum__(self, value):
 		'''Calculate md5 checksum of the whole key and value combined'''
 		md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
-		return md5_hash[:8]
+		return md5_hash#[:8]
 
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
@@ -54,6 +54,8 @@ class Dict:
 				checkSumKeyToStore = keyForDb(key[0], i, "om")
 			if(key[1][0] == "c"):
 				checkSumKeyToStore = keyForDb(key[0], i, "cm")
+			if(key[1][0] == "t"):
+				checkSumKeyToStore = keyForDb(key[0], i, "tm")
 			checkSumValueToStore = self.__insertChecksum__(value)
 			self.db.store(checkSumKeyToStore, checkSumValueToStore)
 
@@ -75,14 +77,18 @@ class Dict:
 
 		# Get checksum for the supplied key
 		for i in range(1, VERSIONS):
-			if(key[1] == "o"):
+			if(key[1][0] == "o"):
 				keyForChecksum = keyForDb(key[0], i, "om")
-			if(key[1] == "c"):
+			if(key[1][0] == "c"):
 				keyForChecksum = keyForDb(key[0], i, "cm")
+			if(key[1][0] == "t"):
+				keyForChecksum = keyForDb(key[0], i, "tm")
 			try:
 				checksumList.append(self.db.fetch(keyForChecksum))
 			except KeyError:
 				checksumList.append("CHECKSUM_DOES_NOT_EXIST")
+			except UnboundLocalError:
+				pass
 
 		# Voting using NLTK's FreqDist module.
 		freqSelection = FreqDist(selection)
@@ -97,7 +103,7 @@ class Dict:
 		else:
 			# Raise checksum error is it does not match.
 			# TO_DO: Again try more selections and checksum comparision
-			raise ChecksumDoesNotMatchError
+			return mostCommonFromSelection
 
 	def __CompareChecksumWithSelection__(self, selection, checksum):
 		# Will take two parameters (selection, checksum) and compare it to 
