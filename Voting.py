@@ -62,8 +62,16 @@ def report(db, reportFile):
 
 	final = {}
 	for keys in tallies:
-
-		line = str(keys) + "\t" + str(tallies[keys]) + "\n"
+		for i in range(1, len(tallies[keys])):
+			if (tallies[keys][1][0], tallies[keys][1][1]) in final:
+				final[(tallies[keys][1][0], tallies[keys][1][1])] += 1
+			else:
+				final[(tallies[keys][1][0], tallies[keys][1][1])] = 1
+		# line = str(keys) + "\t" + str(tallies[keys]) + "\n"
+		# line = str(final[keys]) + "\n"
+		
+	for keys in final:
+		line = "TALLY" + "\t" + str(keys[0]) + "\t" + str(keys[1]) + "\t" + str(final[keys]) + "\n"
 		reportFile.write(line)
 
 
