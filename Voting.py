@@ -30,19 +30,22 @@ COMMANDS["VOTE"] = VOTE
 
 def CAST(db, tempVotes, line, logFile):
 	database = dict.Dict(db)
-	id = tempVotes[0]
-	office = []
-	candidate = []
+	database.insert([VOTERID, "t"], str(len(tempVotes) - 1))
 	for i in range(1, len(tempVotes)):
 		office.append(tempVotes[i][0])
+		officeNumber = "o"+str(i)
+		candidateNumber = "c"+str(i)
 		candidate.append(tempVotes[i][1])
-		database.insert([VOTERID, "o"], tempVotes[i][0])
-		database.insert([VOTERID,  "c"], tempVotes[i][1])
+		database.insert([VOTERID, officeNumber], tempVotes[i][0])
+		database.insert([VOTERID,  candidateNumber], tempVotes[i][1])
 	logFile.write("CAST\t{}\n".format(VOTERID))
-	print(office)
-	print(candidate)
 
 COMMANDS["CAST"] = CAST
+
+def report(db, reportFile):
+	database = dict.Dict(db, "report")
+	tallies = {}
+
 
 ## File read implementation
 try:

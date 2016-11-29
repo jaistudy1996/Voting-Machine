@@ -44,12 +44,15 @@ class Dict:
 		#	__insertChecksum__(key)   ## m should be internal and not added by the main program 
 									## needs editing
 		for i in range(1, VERSIONS):
+			if(key[1] == "t"):
+				self.db.store(keyForDb(key[0], i, key[1]), value)
+				continue
 			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
 			## checksum store
-			if(key[1] == "o"):
+			if(key[1][0] == "o"):
 				checkSumKeyToStore = keyForDb(key[0], i, "om")
-			if(key[1] == "c"):
+			if(key[1][0] == "c"):
 				checkSumKeyToStore = keyForDb(key[0], i, "cm")
 			checkSumValueToStore = self.__insertChecksum__(value)
 			self.db.store(checkSumKeyToStore, checkSumValueToStore)
