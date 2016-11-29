@@ -49,7 +49,7 @@ def report(db, reportFile):
 			tallies[i] = []
 			tallies[i].append(totalVotes)
 			try:
-				for j in range(eval(totalVotes)):
+				for j in range(1, eval(totalVotes)+1):
 					officeNumber = "o"+str(j)
 					candidateNumber = "c"+str(j)
 					office = database.select([i, officeNumber])
