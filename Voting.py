@@ -49,7 +49,7 @@ def report(db, reportFile):
 			tallies[i] = []
 			tallies[i].append(totalVotes)
 			try:
-				for j in range(1, eval(totalVotes)):
+				for j in range(eval(totalVotes)):
 					officeNumber = "o"+str(j)
 					candidateNumber = "c"+str(j)
 					office = database.select([i, officeNumber])
@@ -59,7 +59,10 @@ def report(db, reportFile):
 				continue
 		except dict.ChecksumDoesNotMatchError:
 			continue
+
+	final = {}
 	for keys in tallies:
+
 		line = str(keys) + "\t" + str(tallies[keys]) + "\n"
 		reportFile.write(line)
 
