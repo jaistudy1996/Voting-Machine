@@ -47,7 +47,7 @@ class Dict:
 			if(key[1] == "t"):
 				self.db.store(keyForDb(key[0], i, key[1]), value)
 				# continue
-			keyToStore = keyForDb(key[0], i, key[1][0])
+			keyToStore = keyForDb(key[0], i, key[1])
 			self.db.store(keyToStore, value)
 			## checksum store
 			if(key[1][0] == "o"):
