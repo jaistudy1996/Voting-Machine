@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 """
     Voting.py implements dict.py as its datastructure.
     Team Members: Jayant Arora, Akshay Singh, Muhtasim Mahir, Robert Elliot, Xiaocan Dong
@@ -47,7 +49,7 @@ COMMANDS["CAST"] = CAST
 def report(db, reportFile):
     database = dict.Dict(db, "report")
     tallies = {}
-    for i in range(1, VOTERID):
+    for i in range(1, VOTERID+1):
         try:    
             totalVotes = database.select([i, "t"])
             tallies[i] = []
@@ -79,11 +81,14 @@ def report(db, reportFile):
                 final[(tallies[keys][i][0], tallies[keys][i][1])] = 1
         # line = str(keys) + "\t" + str(tallies[keys]) + "\n"
         # line = str(final[keys]) + "\n"
-        
+    
+    reportFile.write("VOTERS\t", VOTERID)
     for keys in final:
         line = "TALLY" + "\t" + str(keys[0]) + "\t" + str(keys[1]) + "\t" + str(final[keys]) + "\n"
         # line = str(keys) + "\n"
         reportFile.write(line)
+    print(tallies)
+    print(final)
 
 
 def INQ(db, tempVotes, line, inqfile):
