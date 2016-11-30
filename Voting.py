@@ -53,13 +53,19 @@ def report(db, reportFile):
 			tallies[i] = []
 			tallies[i].append(totalVotes)
 			try:
-				for j in range(1, eval(totalVotes)+1):
+				# print(totalVotes) # DEBUG
+				for j in range(1, int(totalVotes)+1):
 					officeNumber = "o"+str(j)
 					candidateNumber = "c"+str(j)
 					office = database.select([i, officeNumber])
 					candidate = database.select([i, candidateNumber])
+					# print((office, candidate))  # DEBUG
 					tallies[i].append((office, candidate))
-			except NameError:
+			except NameError as e:
+				print("Exception -1 in report func: ", e)
+				i -= 1
+			except ValueError as e:
+				print("Exception -2 in report func: ", e)
 				continue
 		except dict.ChecksumDoesNotMatchError:
 			continue
@@ -67,10 +73,10 @@ def report(db, reportFile):
 	final = {}
 	for keys in tallies:
 		for i in range(1, len(tallies[keys])):
-			if (tallies[keys][1][0], tallies[keys][1][1]) in final:
-				final[(tallies[keys][1][0], tallies[keys][1][1])] += 1
+			if (tallies[keys][i][0], tallies[keys][i][1]) in final:
+				final[(tallies[keys][i][0], tallies[keys][i][1])] += 1
 			else:
-				final[(tallies[keys][1][0], tallies[keys][1][1])] = 1
+				final[(tallies[keys][i][0], tallies[keys][i][1])] = 1
 		# line = str(keys) + "\t" + str(tallies[keys]) + "\n"
 		# line = str(final[keys]) + "\n"
 		
@@ -79,6 +85,9 @@ def report(db, reportFile):
 		# line = str(keys) + "\n"
 		reportFile.write(line)
 
+
+def INQ(db, inqfile):
+	pass
 
 ## File read implementation
 try:

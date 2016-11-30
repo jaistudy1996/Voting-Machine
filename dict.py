@@ -46,8 +46,8 @@ class Dict:
 		for i in range(1, VERSIONS):
 			if(key[1] == "t"):
 				self.db.store(keyForDb(key[0], i, key[1]), value)
-				continue
-			keyToStore = keyForDb(key[0], i, key[1])
+				# continue
+			keyToStore = keyForDb(key[0], i, key[1][0])
 			self.db.store(keyToStore, value)
 			## checksum store
 			if(key[1][0] == "o"):
@@ -72,8 +72,11 @@ class Dict:
 			keyToSelect = keyForDb(key[0], i, key[1])
 			try:
 				selection.append(self.db.fetch(keyToSelect))
-			except KeyError:
-				selection.append("DOES_NOT_EXIST")
+			except KeyError as e:
+				# Restart loop if KeyError exception occurs
+				print("Key Exception - 1 in select: ", e)
+				i -= 1
+				# selection.append("DOES_NOT_EXIST")
 
 		# Get checksum for the supplied key
 		for i in range(1, VERSIONS):
@@ -85,17 +88,25 @@ class Dict:
 				keyForChecksum = keyForDb(key[0], i, "tm")
 			try:
 				checksumList.append(self.db.fetch(keyForChecksum))
-			except KeyError:
-				checksumList.append("CHECKSUM_DOES_NOT_EXIST")
+			except KeyError as e:
+				# Restart for loop if exception occurs
+				print("Key exception -2 in select: ", e)
+				i -= 1
+				# checksumList.append("CHECKSUM_DOES_NOT_EXIST")
 			except UnboundLocalError:
 				pass
 
 		# Voting using NLTK's FreqDist module.
-		freqSelection = FreqDist(selection)
-		mostCommonFromSelection = freqSelection.max()
+		try:
+			freqSelection = FreqDist(selection)
+			mostCommonFromSelection = freqSelection.max()
 
-		freqChecksum = FreqDist(checksumList)
-		mostCommonFromChecksum = freqChecksum.max()
+			freqChecksum = FreqDist(checksumList)
+			mostCommonFromChecksum = freqChecksum.max()
+
+		except ValueError as e:
+			print("Value error exception for checksum in select - 1: ", e)
+			return 0
 
 		# Compare checksum 
 		if(self.__CompareChecksumWithSelection__(mostCommonFromSelection, mostCommonFromChecksum) == True):
