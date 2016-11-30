@@ -1,3 +1,7 @@
+"""
+	Voting.py implements dict.py as its datastructure.
+	Team Members: Jayant Arora, Akshay Singh, Muhtasim Mahir, Robert Elliot, Xiaocan Dong
+"""
 
 import crusher
 import dict
@@ -72,6 +76,7 @@ def report(db, reportFile):
 		
 	for keys in final:
 		line = "TALLY" + "\t" + str(keys[0]) + "\t" + str(keys[1]) + "\t" + str(final[keys]) + "\n"
+		# line = str(keys) + "\n"
 		reportFile.write(line)
 
 
