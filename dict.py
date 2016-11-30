@@ -34,8 +34,13 @@ class Dict:
 
 	def __insertChecksum__(self, value):
 		'''Calculate md5 checksum of the whole key and value combined'''
-		md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
-		return md5_hash#[:8]
+
+		try:
+			md5_hash = hashlib.md5(value.encode("utf-8")).hexdigest()
+			return md5_hash#[:8]
+		except AttributeError as e:
+			print("Attribute error in checksum: ", selection, e)
+			return "abcd"
 
 	def insert(self, key, value):
 		'''Key is supposed to be of type list and should be as follows
@@ -119,11 +124,14 @@ class Dict:
 	def __CompareChecksumWithSelection__(self, selection, checksum):
 		# Will take two parameters (selection, checksum) and compare it to 
 		# return boolean value. 
-		if(self.__insertChecksum__(selection) == checksum):
-			return True
-		else:
-			return False
-	
+		# try:
+			if(self.__insertChecksum__(selection) == checksum):
+				return True
+			else:
+				return False
+		# except AttributeError as e:
+		# 	print("Attribute error in checksum: ", selection, e)
+
 
 if __name__ == "__main__":
 	db = crusher.Broker("testDict.txt")
