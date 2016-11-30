@@ -82,7 +82,7 @@ def report(db, reportFile):
         # line = str(keys) + "\t" + str(tallies[keys]) + "\n"
         # line = str(final[keys]) + "\n"
     
-    reportFile.write("VOTERS\t", VOTERID)
+    reportFile.write("VOTERS\t" + VOTERID)
     for keys in final:
         line = "TALLY" + "\t" + str(keys[0]) + "\t" + str(keys[1]) + "\t" + str(final[keys]) + "\n"
         # line = str(keys) + "\n"
