@@ -82,7 +82,7 @@ def report(db, reportFile):
         # line = str(keys) + "\t" + str(tallies[keys]) + "\n"
         # line = str(final[keys]) + "\n"
     
-    reportFile.write("VOTERS\t" + VOTERID)
+    reportFile.write(str("VOTERS\t" + str(VOTERID) + "\n"))
     for keys in final:
         line = "TALLY" + "\t" + str(keys[0]) + "\t" + str(keys[1]) + "\t" + str(final[keys]) + "\n"
         # line = str(keys) + "\n"
@@ -94,30 +94,31 @@ def report(db, reportFile):
 def INQ(db, tempVotes, line, inqfile):
     database = dict.Dict(db, "inquiry")
     tallies = {}
-    for i in range(1, VOTERID):
-        try:    
-            totalVotes = database.select([i, "t"])
-            tallies[i] = []
-            tallies[i].append(i)
-            tallies[i].append(totalVotes)
-            try:
-                # print(totalVotes) # DEBUG
-                for j in range(1, int(totalVotes)+1):
-                    officeNumber = "o"+str(j)
-                    candidateNumber = "c"+str(j)
-                    office = database.select([i, officeNumber])
-                    candidate = database.select([i, candidateNumber])
-                    # print((office, candidate))  # DEBUG
-                    tallies[i].append((office, candidate))
-            except NameError as e:
-                print("Exception -1 in INQ func: ", e)
-                i -= 1
-            except ValueError as e:
-                print("Exception -2 in INQ func: ", e)
-                continue
-        except dict.ChecksumDoesNotMatchError:
-            continue
-
+    # for i in range(1, VOTERID):
+    i = line[1]
+    try:    
+        totalVotes = database.select([i, "t"])
+        tallies[i] = []
+        tallies[i].append(i)
+        tallies[i].append(totalVotes)
+        try:
+            # print(totalVotes) # DEBUG
+            for j in range(1, int(totalVotes)+1):
+                officeNumber = "o"+str(j)
+                candidateNumber = "c"+str(j)
+                office = database.select([i, officeNumber])
+                candidate = database.select([i, candidateNumber])
+                # print((office, candidate))  # DEBUG
+                tallies[i].append((office, candidate))
+        except NameError as e:
+            print("Exception -1 in INQ func: ", e)
+            # i -= 1
+        except ValueError as e:
+            print("Exception -2 in INQ func: ", e)
+            # continue
+    except dict.ChecksumDoesNotMatchError:
+        # continue
+        pass
 
     for keys in tallies:
         if(line[1] == tallies[keys][0]):
@@ -145,7 +146,7 @@ db = crusher.Broker(fileName)
 votesFile = open(fileName, "r")
 logFile = open(fileName[:-4]+"-votelog.txt", "w")
 resultFile = open(fileName[:-4]+"-results.txt", "w")
-inqfile = open(fileName[:-4]+"-inqries.txt", "w")
+# inqfile = open(fileName[:-4]+"-inqries.txt", "w")
 
 tempVotes = []
 for line in votesFile:
@@ -158,5 +159,5 @@ report(db, resultFile)
 resultFile.close()
 votesFile.close()
 logFile.close()
-inqfile.close()
+# inqfile.close()
 db.exit()
