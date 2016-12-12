@@ -2,6 +2,7 @@
 
 """
     Voting.py implements dict.py as its datastructure.
+    Author: Jayant Arora.
     Team Members: Jayant Arora, Akshay Singh, Muhtasim Mahir, Robert Elliot, Xiaocan Dong
 """
 
